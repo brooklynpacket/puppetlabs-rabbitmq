@@ -6,6 +6,8 @@ class rabbitmq::repo::apt(
   $pin = undef
 ) {
 
+  Class['rabbitmq::repo::apt'] -> Package<| title == 'rabbitmq-server' |>
+
   apt::source { 'rabbitmq':
     location    => 'http://www.rabbitmq.com/debian/',
     release     => 'testing',
@@ -13,6 +15,7 @@ class rabbitmq::repo::apt(
     include_src => false,
     key         => 'RabbitMQ Release Signing Key <info@rabbitmq.com>',
     key_content => template('rabbitmq/rabbit.pub.key'),
+    pin         => $pin,
   }
 
   if ! ($pin == undef) {
